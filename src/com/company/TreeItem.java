@@ -1,30 +1,44 @@
 package com.company;
 
-public class TreeItem extends ListItem {
+public class TreeItem implements Comparable<TreeItem> {
+
+    private TreeItem left;
+    private TreeItem right;
+    private int value;
 
     public TreeItem(int value) {
-        super(value);
+        this.value = value;
     }
 
-    @Override
-    public ListItem left() {
-        return this.left;
+    public TreeItem getRight() {
+        return right;
     }
 
-    @Override
-    public ListItem right() {
-        return this.right;
+    public TreeItem getLeft() {
+        return left;
     }
 
-    @Override
-    public ListItem setLeft(ListItem leftItem) {
+    public int getValue() {
+        return value;
+    }
+
+    public TreeItem setLeft(TreeItem leftItem) {
         this.left = leftItem;
         return this.left;
     }
 
-    @Override
-    public ListItem setRight(ListItem rightItem) {
+    public TreeItem setRight(TreeItem rightItem) {
         this.right = rightItem;
         return this.right;
+    }
+
+    @Override
+    public int compareTo(TreeItem treeItem) {
+        if(this.value > treeItem.getValue())
+            return 1;
+        else if(this.value < treeItem.getValue())
+            return -1;
+        else
+            return 0;
     }
 }

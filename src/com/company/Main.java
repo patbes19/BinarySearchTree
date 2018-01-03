@@ -16,5 +16,11 @@ public class Main {
         tree.addItem(new TreeItem(13));
 
         tree.printList();
+
+        TreeItem parent = tree.findParent(new TreeItem(8));
+        if(parent != null)
+            System.out.println(parent.getValue());
+        else
+            System.out.println("null");
     }
 }

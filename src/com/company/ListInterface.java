@@ -2,8 +2,8 @@ package com.company;
 
 public interface ListInterface {
 
-    boolean addItem(ListItem newItem);
-    boolean removeItem(ListItem itemToRemove);
-    ListItem setBaseItem(ListItem baseItem);
+    boolean addItem(TreeItem newItem);
+    boolean removeItem(TreeItem itemToRemove);
+    TreeItem setBaseItem(TreeItem baseItem);
     void printList();
 }
