@@ -3,7 +3,7 @@ package com.company;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class BinarySearchTree implements ListInterface {
+public class BinarySearchTree implements TreeInterface {
 
     private TreeItem baseItem;
     private ArrayList<LinkedList<TreeItem>> nodesList;
@@ -51,8 +51,8 @@ public class BinarySearchTree implements ListInterface {
                 }
                 else {
                     //item already exists message
-                    System.out.println("Item '" + newItem.getValue() + "' already exists");
-                    return true;
+                    //System.out.println("Item '" + newItem.getValue() + "' already exists");
+                    return false;
                 }
             }
         }
@@ -92,14 +92,14 @@ public class BinarySearchTree implements ListInterface {
                 }
             }
             //itemToRemove not found message
-            System.out.println("Item not found");
+            //System.out.println("Item not found");
             return false;
         }
         else {
             //list is empty message
-            System.out.println("Tree is empty");
+            //System.out.println("Tree is empty");
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -109,12 +109,55 @@ public class BinarySearchTree implements ListInterface {
     }
 
     @Override
-    public void printList() {
+    public void traverse() {
         traverseTreeRecursively(this.baseItem);
+        System.out.println();
+    }
+
+    public void printTree() {
+
+        this.nodesList.clear(); //clear list
+        saveTreeItemInTheList(this.baseItem, 0); //initialize list
+
+        for(int i = 0; i < this.nodesList.size(); i++) {
+            System.out.print("| ");
+            for(TreeItem currentItem : this.nodesList.get(i)) {
+                if(currentItem != null)
+                    System.out.print(currentItem.getValue());
+                else
+                    System.out.print("-");
+
+                System.out.print(" | ");
+            }
+            System.out.println();
+        }
+    }
+
+    public TreeItem findItem(TreeItem itemToFind) {
+
+        //start elements
+        TreeItem currentItem = this.baseItem;
+
+        while(currentItem != null) {
+
+            if(itemToFind.compareTo(currentItem) == 0) {
+                //item found
+                return itemToFind;
+            }
+            else if(itemToFind.compareTo(currentItem) > 0){
+                //item greater than current - go to the right
+                currentItem = currentItem.getRight();
+            }
+            else {
+                //item smaller than current - go to the left
+                currentItem = currentItem.getLeft();
+            }
+        }
+        //item doesn't exist
+        return null;
     }
 
     private boolean performRemoving(TreeItem itemToRemove, TreeItem itemToRemoveParent) {
-        System.out.println(itemToRemove.getValue() + " from " + itemToRemoveParent.getValue());
 
         //case 1 - no children
         if(itemToRemove.getLeft() == null && itemToRemove.getRight() == null) {
@@ -249,16 +292,16 @@ public class BinarySearchTree implements ListInterface {
         return false;
     }
 
-    public void traverseTreeRecursively(TreeItem currentItem) {
+    private void traverseTreeRecursively(TreeItem currentItem) {
 
         if(currentItem != null) {
             traverseTreeRecursively(currentItem.getLeft());
-            System.out.println(currentItem.getValue());
+            System.out.print(currentItem.getValue() + " ");
             traverseTreeRecursively(currentItem.getRight());
         }
     }
 
-    private void saveTreeNodeInTheList(TreeItem currentItem, int currentTreeLevel) {
+    private void saveTreeItemInTheList(TreeItem currentItem, int currentTreeLevel) {
 
         if(currentTreeLevel == 0) {
             //first item
@@ -277,24 +320,32 @@ public class BinarySearchTree implements ListInterface {
             }
 
             //current item parent index necessary for adding current item in the right place on the list
-            int currentItemParentIndex = findNodeInOneLevelList(this.nodesList.get(currentTreeLevel-1), findParent(currentItem));
+            TreeItem currentItemParent = findParentItem(currentItem);
+            int currentItemParentIndex = getItemIndexFromOneLevelList(this.nodesList.get(currentTreeLevel-1), currentItemParent);
 
-            //adding current item
-                nodesList.get(currentTreeLevel).set(2*currentItemParentIndex, currentItem);
+            //check if current item is left or right item of its parent
+            //then add current item to the list
+            if(currentItemParent.getLeft() != null) {
+                if (findParentItem(currentItem).getLeft().compareTo(currentItem) == 0)
+                    nodesList.get(currentTreeLevel).set(2 * currentItemParentIndex, currentItem);
+            }
+
+            if(currentItemParent.getRight() != null) {
+                if (findParentItem(currentItem).getRight().compareTo(currentItem) == 0)
+                    nodesList.get(currentTreeLevel).set(2 * currentItemParentIndex + 1, currentItem);
+            }
         }
 
         //save left node recursively
         if(currentItem.getLeft() != null)
-            saveTreeNodeInTheList(currentItem.getLeft(), currentTreeLevel+1);
+            saveTreeItemInTheList(currentItem.getLeft(), currentTreeLevel+1);
 
         //save right node recursively
         if(currentItem.getRight() != null)
-            saveTreeNodeInTheList(currentItem.getRight(), currentTreeLevel+1);
-
-
+            saveTreeItemInTheList(currentItem.getRight(), currentTreeLevel+1);
     }
 
-    private static int findNodeInOneLevelList(LinkedList<TreeItem> nodesLevel, TreeItem itemToFind) {
+    private static int getItemIndexFromOneLevelList(LinkedList<TreeItem> nodesLevel, TreeItem itemToFind) {
 
         for(int i = 0; i < nodesLevel.size(); i++) {
             if(nodesLevel.get(i) != null) {
@@ -305,8 +356,9 @@ public class BinarySearchTree implements ListInterface {
         return -1;
     }
 
-    public TreeItem findParent(TreeItem childItem) {
+    private TreeItem findParentItem(TreeItem childItem) {
 
+        //start elements
         TreeItem currentItem = this.baseItem;
         TreeItem currentItemParent = null;
 
@@ -330,5 +382,4 @@ public class BinarySearchTree implements ListInterface {
         //child doesn't exist
         return null;
     }
-
 }

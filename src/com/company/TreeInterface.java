@@ -1,9 +1,11 @@
 package com.company;
 
-public interface ListInterface {
+public interface TreeInterface {
 
     boolean addItem(TreeItem newItem);
     boolean removeItem(TreeItem itemToRemove);
     TreeItem setBaseItem(TreeItem baseItem);
-    void printList();
+    void traverse();
+    void printTree();
+    TreeItem findItem(TreeItem itemToFind);
 }
