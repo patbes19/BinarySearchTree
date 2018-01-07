@@ -33,15 +33,11 @@ public class Main {
                 userScannerIn.nextLine(); //clear scanner line
             }
             catch(InputMismatchException e) {
-                userChoice = 0;
+                userChoice = -1;
                 userScannerIn.nextLine(); //clear scanner line
             }
 
             switch(userChoice) {
-                //TreeItem currentItem;
-                case 0:
-                    System.out.println("Error, wrong parameter type");
-                    break;
                 case 1:
                     System.out.print("Enter item to add: ");
                     try {
@@ -106,7 +102,7 @@ public class Main {
                     quit = true;
                     break;
                 default:
-                    System.out.println("Wrong parameter");
+                    System.out.println("Error, wrong parameter");
             }
         }
 
